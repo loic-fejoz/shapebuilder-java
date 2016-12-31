@@ -24,7 +24,7 @@ public class SVGTurtle implements Turtle {
 	public SVGTurtle(final Writer output) {
 		position = Vector3D.ZERO;
 		direction = new Vector3D(5, 0, 0);
-		setDefaultAngle(90);
+		setDefaultAngle(Math.PI / 2);
 		w = output;
 		write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
 				+ "<svg\n"
