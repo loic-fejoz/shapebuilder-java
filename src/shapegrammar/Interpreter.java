@@ -39,7 +39,7 @@ public class Interpreter<R> {
 		
 	}
 
-	private void evaluateNode(final Node<? super R> rule) {
+	protected void evaluateNode(final Node<? super R> rule) {
 		rule.run();
 		for(Node<? super R> newChild: rule.get()) {
 			if (newChild instanceof Rule) {
