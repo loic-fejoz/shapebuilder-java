@@ -24,4 +24,8 @@ public class TurtleFactory {
 	public static TerminalShape<Turtle> minus() {
 		return new MinusConstant();
 	}
+	
+	public static TerminalShape<Turtle> f() {
+		return new FConstant();
+	}
 }
