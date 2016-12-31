@@ -6,17 +6,25 @@ package turtle;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
+import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
 /**
  * @author loic
  *
  */
 public class SVGTurtle implements Turtle {
 
-	private double position[]  = {0.0, 0.0};
-	private double direction[] = {1.0, 0.0};
+	private Vector3D position;
+	private Vector3D direction;
 	private Writer w;
+	private Rotation defaultAngle;
 
 	public SVGTurtle(final Writer output) {
+		position = Vector3D.ZERO;
+		direction = new Vector3D(5, 0, 0);
+		setDefaultAngle(90);
 		w = output;
 		write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
 				+ "<svg\n"
@@ -44,9 +52,9 @@ public class SVGTurtle implements Turtle {
 
 	private void move(final String command) {
 		write(command);
-		write(Double.toString(position[0]));
+		write(Double.toString(position.getX()));
 		write(",");
-		write(Double.toString(position[1]));
+		write(Double.toString(position.getY()));
 		write(" ");
 	}
 
@@ -63,19 +71,7 @@ public class SVGTurtle implements Turtle {
 	 */
 	@Override
 	public void left() {
-		if (direction[0] == 1.0) {
-			direction[0] = 0.0;
-			direction[1] = 1.0;
-		} else if (direction[0] == -1.0) {
-			direction[0] =  0.0;
-			direction[1] = -1.0;
-		} else if (direction[1] == 1.0) {
-			direction[0] = -1.0;
-			direction[1] =  0.0;
-		} else if (direction[1] == -1.0) {
-			direction[0] = 1.0;
-			direction[1] = 0.0;
-		}
+		direction = defaultAngle.applyTo(direction);
 	}
 
 	/* (non-Javadoc)
@@ -83,19 +79,7 @@ public class SVGTurtle implements Turtle {
 	 */
 	@Override
 	public void right() {
-		if (direction[0] == 1.0) {
-			direction[0] = 0.0;
-			direction[1] = -1.0;
-		} else if (direction[0] == -1.0) {
-			direction[0] = 0.0;
-			direction[1] = 1.0;
-		} else if (direction[1] == 1.0) {
-			direction[0] = 1.0;
-			direction[1] = 0.0;
-		} else if (direction[1] == -1.0) {
-			direction[0] = -1.0;
-			direction[1] = 0.0;
-		}
+		direction = defaultAngle.applyInverseTo(direction);
 	}
 
 	/* (non-Javadoc)
@@ -103,14 +87,18 @@ public class SVGTurtle implements Turtle {
 	 */
 	@Override
 	public void forward() {
-		position[0] += 5 * direction[0];
-		position[1] += 5 * direction[1];
+		position = position.add(direction);
 		move("L");
 	}
 	
 	public void close() throws IOException {
 		write("\"/>\n");
 		write("</svg>\n");
+	}
+
+	@Override
+	public void setDefaultAngle(final double value) {
+		defaultAngle = new Rotation(new Vector3D(0, 0, 1), value, RotationConvention.VECTOR_OPERATOR);;
 	}
 
 }

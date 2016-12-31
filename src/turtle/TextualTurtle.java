@@ -21,4 +21,8 @@ public class TextualTurtle implements Turtle {
 		System.out.print("F");
 	}
 
+	@Override
+	public void setDefaultAngle(double angle) {
+	}
+
 }

@@ -14,4 +14,6 @@ public interface Turtle {
 	public void right();
 
 	public void forward();
+	
+	public void setDefaultAngle(double angle);
 }
