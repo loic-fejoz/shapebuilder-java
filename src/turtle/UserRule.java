@@ -38,7 +38,15 @@ public class UserRule<R extends Turtle> extends Rule<R> {
 				break;
 			case '-':
 				renderer.right();
-				break;	
+				break;
+			case '[':
+				renderer.push();
+				break;
+			case ']':
+				renderer.pop();
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown: " + c);
 			}
 		}
 	}

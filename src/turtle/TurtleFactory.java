@@ -28,4 +28,12 @@ public class TurtleFactory {
 	public static TerminalShape<Turtle> f() {
 		return new FConstant();
 	}
+	
+	public static TerminalShape<Turtle> push() {
+		return new PushConstant();
+	}
+	
+	public static TerminalShape<Turtle> pop() {
+		return new PopConstant();
+	}
 }

@@ -63,4 +63,14 @@ public class DragonRendererImpl implements DragonRenderer {
 		turtle.setDefaultAngle(angle);
 	}
 
+	@Override
+	public void push() {
+		turtle.push();
+	}
+
+	@Override
+	public void pop() {
+		turtle.pop();
+	}
+
 }

@@ -1,5 +1,8 @@
 package turtle;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,10 +56,31 @@ public class TurtleInterpreter<R extends Turtle> extends Interpreter<R> {
 					break;
 				case '-':
 					axiomsList.add(new MinusConstant());
-					break;	
+					break;
+				case '[':
+					axiomsList.add(new PushConstant());
+					break;
+				case ']':
+					axiomsList.add(new PopConstant());
+					break;
+				default:
+					throw new IllegalArgumentException("Unknown: " + c);
 				}
 			}
 		}
 		return axiomsList;
+	}
+	
+	public void writeToFile(
+			final Node<? super Turtle> axiom,
+			final String path,
+			final double defaultAngle
+			) throws IOException {
+		final FileWriter output = new FileWriter(new File(path));
+		final SVGTurtle svgTurtle = new SVGTurtle(output);
+		svgTurtle.setDefaultAngle(defaultAngle);
+		axiom.render(svgTurtle);
+		svgTurtle.close();
+		output.close();
 	}
 }

@@ -3,12 +3,9 @@
  */
 package zoo;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 import shapegrammar.Node;
-import turtle.SVGTurtle;
 import turtle.TextualTurtle;
 import turtle.Turtle;
 import turtle.TurtleInterpreter;
@@ -17,13 +14,13 @@ import turtle.TurtleInterpreter;
  * @author loic
  *
  */
-public class SierpinskiArrowHeadCurve {
+public class FractalPlant {
 	
 	public static void main(final String[] args) throws IOException {
 		final TurtleInterpreter<Turtle> interp = new TurtleInterpreter<>();
-		//(A → +B−A−B+), (B → −A+B+A−)
-		interp.declareRule('A', "+B-A-B+", "F");
-		interp.declareRule('B', "-A+B+A-", "F");
+		// (X → F−[[X]+X]+F[+FX]−X), (F → FF)
+		interp.declareRule('A', "B-[[A]+A]+B[+BA]-A", "");
+		interp.declareRule('B', "BB", "F");
 		final Node<? super Turtle> axiom = interp.createAxiom("A");
 		interp.evaluate(axiom, 1);
 		axiom.render(new TextualTurtle());
@@ -32,7 +29,7 @@ public class SierpinskiArrowHeadCurve {
 			interp.evaluate();
 			axiom.render(new TextualTurtle());
 		}
-		interp.writeToFile(axiom, "/tmp/sierpinski-arrowhead-curve.svg", Math.PI / 3.0);
+		interp.writeToFile(axiom, "/tmp/fractal.svg", 25.0 * Math.PI / 180.0);
 	}
 
 }

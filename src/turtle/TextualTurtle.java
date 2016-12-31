@@ -25,4 +25,14 @@ public class TextualTurtle implements Turtle {
 	public void setDefaultAngle(double angle) {
 	}
 
+	@Override
+	public void push() {
+		System.out.print("[");
+	}
+
+	@Override
+	public void pop() {
+		System.out.print("]");
+	}
+
 }

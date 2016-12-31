@@ -5,6 +5,7 @@ package turtle;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Stack;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationConvention;
@@ -16,14 +17,21 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
  */
 public class SVGTurtle implements Turtle {
 
-	private Vector3D position;
-	private Vector3D direction;
+	public class TurtleState {
+		private Vector3D position;
+		private Vector3D direction;
+	}
+
+	private TurtleState state;
+	private Stack<TurtleState> stack;
 	private Writer w;
 	private Rotation defaultAngle;
 
 	public SVGTurtle(final Writer output) {
-		position = Vector3D.ZERO;
-		direction = new Vector3D(5, 0, 0);
+		stack = new Stack<>();
+		state = new TurtleState();
+		state.position = Vector3D.ZERO;
+		state.direction = new Vector3D(5, 0, 0);
 		setDefaultAngle(Math.PI / 2);
 		w = output;
 		write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
@@ -52,9 +60,9 @@ public class SVGTurtle implements Turtle {
 
 	private void move(final String command) {
 		write(command);
-		write(Double.toString(position.getX()));
+		write(Double.toString(state.position.getX()));
 		write(",");
-		write(Double.toString(position.getY()));
+		write(Double.toString(state.position.getY()));
 		write(" ");
 	}
 
@@ -71,7 +79,7 @@ public class SVGTurtle implements Turtle {
 	 */
 	@Override
 	public void left() {
-		direction = defaultAngle.applyTo(direction);
+		state.direction = defaultAngle.applyTo(state.direction);
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +87,7 @@ public class SVGTurtle implements Turtle {
 	 */
 	@Override
 	public void right() {
-		direction = defaultAngle.applyInverseTo(direction);
+		state.direction = defaultAngle.applyInverseTo(state.direction);
 	}
 
 	/* (non-Javadoc)
@@ -87,7 +95,7 @@ public class SVGTurtle implements Turtle {
 	 */
 	@Override
 	public void forward() {
-		position = position.add(direction);
+		state.position = state.position.add(state.direction);
 		move("L");
 	}
 	
@@ -99,6 +107,16 @@ public class SVGTurtle implements Turtle {
 	@Override
 	public void setDefaultAngle(final double value) {
 		defaultAngle = new Rotation(new Vector3D(0, 0, 1), value, RotationConvention.VECTOR_OPERATOR);;
+	}
+
+	@Override
+	public void push() {
+		stack.push(state);
+	}
+
+	@Override
+	public void pop() {
+		state = stack.pop();
 	}
 
 }
