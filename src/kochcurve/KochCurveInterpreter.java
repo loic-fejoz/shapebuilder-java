@@ -6,9 +6,10 @@ import java.io.IOException;
 
 import turtle.SVGTurtle;
 import turtle.TextualTurtle;
+import turtle.Turtle;
 import turtle.TurtleInterpreter;
 
-public class KochCurveInterpreter extends TurtleInterpreter {
+public class KochCurveInterpreter extends TurtleInterpreter<Turtle> {
 	
 	public static void main(final String[] args) throws IOException {
 		

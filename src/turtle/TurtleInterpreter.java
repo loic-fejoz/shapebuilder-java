@@ -2,6 +2,6 @@ package turtle;
 
 import shapegrammar.Interpreter;
 
-public abstract class TurtleInterpreter extends Interpreter<Turtle> {
+public class TurtleInterpreter<R extends Turtle> extends Interpreter<R> {
 
 }

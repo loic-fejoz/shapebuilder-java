@@ -10,7 +10,7 @@ import java.util.List;
  * @author loic
  *
  */
-public abstract class Interpreter<R> {
+public class Interpreter<R> {
 	
 	public Node<? super R> initialShape;
 	public List<Rule<? super R>> notYetEvaluated;
