@@ -10,12 +10,12 @@ import java.util.concurrent.Callable;
  * @author loic
  *
  */
-public abstract class Node<R> implements Callable<List<Node<R>>>, Runnable {
+public abstract class Node<R> implements Callable<List<Node<? super R>>>, Runnable {
 	
 	public Scope scope;
 	public Pivot pivot;
 	
-	protected List<Node<R>> children;
+	protected List<Node<? super R>> children;
 	
 	public void run() {
 		if (children == null) {
@@ -23,15 +23,15 @@ public abstract class Node<R> implements Callable<List<Node<R>>>, Runnable {
 		}
 	}
 
-	public abstract List<Node<R>> call();
+	public abstract List<Node<? super R>> call();
 	
 	public void render(R renderer) {
-		for(Node<R> child: children) {
+		for(Node<? super R> child: children) {
 			child.render(renderer);
 		}
 	}
 	
-	public List<Node<R>> get() {
+	public List<Node<? super R>> get() {
 		return children;
 	}
 }

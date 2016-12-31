@@ -11,7 +11,7 @@ import java.util.List;
  *
  */
 public abstract class TerminalShape<R> extends Node<R> {
-	public List<Node<R>> call() {
+	public List<Node<? super R>> call() {
 		return Collections.emptyList();
 	}
 	

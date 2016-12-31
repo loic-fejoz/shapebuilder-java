@@ -12,13 +12,13 @@ import java.util.List;
  */
 public abstract class Interpreter<R> {
 	
-	public Node<R> initialShape;
-	public List<Rule<R>> notYetEvaluated;
+	public Node<? super R> initialShape;
+	public List<Rule<? super R>> notYetEvaluated;
 
 	public Interpreter() {
 	}
 	
-	public void evaluate(final Node<R> axiom, final int depth) {
+	public void evaluate(final Node<? super R> axiom, final int depth) {
 		initialShape = axiom;
 		for(int i = 0; i < depth; ++i) {
 			evaluate();
@@ -30,20 +30,20 @@ public abstract class Interpreter<R> {
 			notYetEvaluated = new LinkedList<>();
 			evaluateNode(initialShape);
 		} else {
-			final List<Rule<R>> currentlyNotEvaluated = new LinkedList<>(notYetEvaluated);
+			final List<Rule<? super R>> currentlyNotEvaluated = new LinkedList<>(notYetEvaluated);
 			notYetEvaluated = new LinkedList<>();
-			for(Rule<R> rule: currentlyNotEvaluated) {
+			for(Rule<? super R> rule: currentlyNotEvaluated) {
 				evaluateNode(rule);
 			}
 		}
 		
 	}
 
-	private void evaluateNode(final Node<R> rule) {
+	private void evaluateNode(final Node<? super R> rule) {
 		rule.run();
-		for(Node<R> newChild: rule.get()) {
+		for(Node<? super R> newChild: rule.get()) {
 			if (newChild instanceof Rule) {
-				notYetEvaluated.add((Rule<R>) newChild);
+				notYetEvaluated.add((Rule<? super R>) newChild);
 			}
 		}
 	}

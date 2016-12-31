@@ -14,7 +14,7 @@ import turtle.Turtle;
 public class FRule extends Rule<Turtle> {
 
 	@Override
-	public List<Node<Turtle>> call() {
+	public List<Node<? super Turtle>> call() {
 		//F → F+F−F−F+F
 		return Arrays.asList(
 				f(),
