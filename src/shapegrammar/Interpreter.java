@@ -10,15 +10,15 @@ import java.util.List;
  * @author loic
  *
  */
-public abstract class Interpreter<G, R> {
+public abstract class Interpreter<R> {
 	
-	public Node<G, R> initialShape;
-	public List<Rule<G, R>> notYetEvaluated;
+	public Node<R> initialShape;
+	public List<Rule<R>> notYetEvaluated;
 
 	public Interpreter() {
 	}
 	
-	public void evaluate(final Node<G, R> axiom, final int depth) {
+	public void evaluate(final Node<R> axiom, final int depth) {
 		initialShape = axiom;
 		for(int i = 0; i < depth; ++i) {
 			evaluate();
@@ -28,18 +28,23 @@ public abstract class Interpreter<G, R> {
 	public void evaluate() {
 		if (notYetEvaluated == null) {
 			notYetEvaluated = new LinkedList<>();
-			initialShape.grammar = getGrammar();
-			initialShape.run();
+			evaluateNode(initialShape);
 		} else {
-			final List<Rule<G, R>> currentlyNotEvaluated = new LinkedList<>(notYetEvaluated);
+			final List<Rule<R>> currentlyNotEvaluated = new LinkedList<>(notYetEvaluated);
 			notYetEvaluated = new LinkedList<>();
-			for(Rule<G, R> rule: currentlyNotEvaluated) {
-				rule.grammar = getGrammar();
-				rule.run();
+			for(Rule<R> rule: currentlyNotEvaluated) {
+				evaluateNode(rule);
 			}
 		}
 		
 	}
 
-	protected abstract G getGrammar();
+	private void evaluateNode(final Node<R> rule) {
+		rule.run();
+		for(Node<R> newChild: rule.get()) {
+			if (newChild instanceof Rule) {
+				notYetEvaluated.add((Rule<R>) newChild);
+			}
+		}
+	}
 }

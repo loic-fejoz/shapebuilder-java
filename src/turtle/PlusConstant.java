@@ -2,7 +2,7 @@ package turtle;
 
 import shapegrammar.TerminalShape;
 
-public class PlusConstant<G extends TurtleGrammar<G>> extends TerminalShape<G, Turtle> {
+public class PlusConstant extends TerminalShape<Turtle> {
 	@Override
 	public void render(final Turtle turtle) {
 		turtle.left();

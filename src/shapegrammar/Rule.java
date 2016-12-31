@@ -1,6 +1,7 @@
 package shapegrammar;
 
-public abstract class Rule<G, R> extends Node<G, R> {
+public abstract class Rule<R> extends Node<R> {
+
 	public void render(final R renderer) {
 		if (children == null) {
 			renderDefault(renderer);
@@ -10,4 +11,5 @@ public abstract class Rule<G, R> extends Node<G, R> {
 	}
 
 	protected abstract void renderDefault(R renderer);
+
 }
