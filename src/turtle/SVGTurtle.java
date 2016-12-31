@@ -20,6 +20,16 @@ public class SVGTurtle implements Turtle {
 	public class TurtleState {
 		private Vector3D position;
 		private Vector3D direction;
+		
+		public TurtleState(final TurtleState st) {
+			position = st.position;
+			direction = st.direction;
+		}
+		
+		public TurtleState(final Vector3D p, final Vector3D d) {
+			position = p;
+			direction = d;
+		}
 	}
 
 	private TurtleState state;
@@ -29,9 +39,7 @@ public class SVGTurtle implements Turtle {
 
 	public SVGTurtle(final Writer output) {
 		stack = new Stack<>();
-		state = new TurtleState();
-		state.position = Vector3D.ZERO;
-		state.direction = new Vector3D(5, 0, 0);
+		state = new TurtleState(Vector3D.ZERO, new Vector3D(5, 0, 0));
 		setDefaultAngle(Math.PI / 2);
 		w = output;
 		write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n"
@@ -99,8 +107,12 @@ public class SVGTurtle implements Turtle {
 		move("L");
 	}
 	
-	public void close() throws IOException {
+	public void endPath() {
 		write("\"/>\n");
+	}
+	
+	public void close() throws IOException {
+		endPath();
 		write("</svg>\n");
 	}
 
@@ -111,12 +123,14 @@ public class SVGTurtle implements Turtle {
 
 	@Override
 	public void push() {
-		stack.push(state);
+		stack.push(new TurtleState(state));
 	}
 
 	@Override
 	public void pop() {
+		endPath();
 		state = stack.pop();
+		startNewPath();
 	}
 
 }
