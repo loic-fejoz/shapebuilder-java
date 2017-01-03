@@ -3,15 +3,10 @@
  */
 package zoo;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import static turtle.GrammarBuilder.grammar;
+import static turtle.RuleBuilder.aRule;
 
-import shapegrammar.Node;
-import turtle.SVGTurtle;
-import turtle.TextualTurtle;
-import turtle.Turtle;
-import turtle.TurtleInterpreter;
+import java.io.IOException;
 
 /**
  * @author loic
@@ -20,19 +15,19 @@ import turtle.TurtleInterpreter;
 public class SierpinskiArrowHeadCurve {
 	
 	public static void main(final String[] args) throws IOException {
-		final TurtleInterpreter<Turtle> interp = new TurtleInterpreter<>();
-		//(A → +B−A−B+), (B → −A+B+A−)
-		interp.declareRule('A', "+B-A-B+", "F");
-		interp.declareRule('B', "-A+B+A-", "F");
-		final Node<? super Turtle> axiom = interp.createAxiom("A");
-		interp.evaluate(axiom, 1);
-		axiom.render(new TextualTurtle());
-		for(int i = 0; i < 5; i++) {
-			System.out.println();
-			interp.evaluate();
-			axiom.render(new TextualTurtle());
-		}
-		interp.writeToFile(axiom, "/tmp/sierpinski-arrowhead-curve.svg", Math.PI / 3.0);
+		grammar()
+		.maxIterationIs(5)
+		.defaultDegreeAngleIs(60.0)
+		.initialAxiomIs("A")
+		.declare(
+				aRule('A')
+				.withExtension("+B-A-B+")
+				.withDefaultRendering("F"))
+		.declare(
+				aRule('B')
+				.withExtension("-A+B+A-")
+				.withDefaultRendering("F"))
+		.save("/tmp/sierpinski-arrowhead-curve.svg");
 	}
 
 }

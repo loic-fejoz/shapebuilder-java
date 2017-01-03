@@ -29,7 +29,7 @@ public class FRule extends Rule<Turtle> {
 	}
 
 	@Override
-	protected void renderDefault(Turtle turtle) {
+	public void renderDefault(Turtle turtle) {
 		turtle.forward();
 	}
 }

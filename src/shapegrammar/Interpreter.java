@@ -5,6 +5,9 @@ package shapegrammar;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+
+import turtle.StochasticUserRule;
 
 /**
  * @author loic
@@ -14,8 +17,11 @@ public class Interpreter<R> {
 	
 	public Node<? super R> initialShape;
 	public List<Rule<? super R>> notYetEvaluated;
+	protected Random rand;
 
-	public Interpreter() {
+	public Interpreter(final Random rnd) {
+		rand = rnd;
+		assert(rand != null);
 	}
 	
 	public void evaluate(final Node<? super R> axiom, final int depth) {
@@ -40,6 +46,9 @@ public class Interpreter<R> {
 	}
 
 	protected void evaluateNode(final Node<? super R> rule) {
+		if (rule instanceof StochasticUserRule) {
+			((StochasticUserRule<? super R>)rule).setRandomGenerator(rand);
+		}
 		rule.run();
 		for(Node<? super R> newChild: rule.get()) {
 			if (newChild instanceof Rule) {

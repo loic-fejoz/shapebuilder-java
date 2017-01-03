@@ -4,6 +4,7 @@
 package turtle;
 
 import java.io.IOException;
+import java.util.Random;
 
 import shapegrammar.Node;
 
@@ -24,7 +25,7 @@ public class GrammarBuilder {
 	private String axioms;
 
 	public GrammarBuilder() {
-		interp = new TurtleInterpreter<>();
+		interp = new TurtleInterpreter<>(new Random());
 	}
 
 	public GrammarBuilder maxIterationIs(final int n) {
@@ -36,17 +37,12 @@ public class GrammarBuilder {
 		defaultAngle = d * Math.PI / 180.0;
 		return this;
 	}
-	
+
 	public GrammarBuilder initialAxiomIs(final String value) {
 		axioms = value;
 		return this;
 	}
-	
-	public GrammarBuilder declare(final char name, final String extension, final String defaultRendering) {
-		interp.declareRule(name, extension, defaultRendering);
-		return this;
-	}
-	
+
 	public void save(final String path) throws IOException {
 		axiom = interp.createAxiom(axioms);
 		interp.evaluate(axiom, maxIteration);
@@ -54,6 +50,20 @@ public class GrammarBuilder {
 	}
 
 	public GrammarBuilder declare(final RuleBuilder aRule) {
-		return declare(aRule.name, aRule.extension, aRule.defaultRendering);
+		aRule.declare(this);
+		return this;
+	}
+	
+	public GrammarBuilder declare(final StochasticUserRuleBuilder aRule) {
+		aRule.declare(this);
+		return this;
+	}
+
+	public void declare(char name, UserRuleDeclaration<Turtle> ruleDecl) {
+		interp.declareRule(name, ruleDecl);
+	}
+
+	public <R extends Turtle> void declare(char name, final StochasticUserRuleDeclaration<Turtle> ruleDecl) {
+		interp.declareRule(name, ruleDecl);
 	}
 }

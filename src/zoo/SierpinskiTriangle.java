@@ -3,12 +3,10 @@
  */
 package zoo;
 
-import java.io.IOException;
+import static turtle.GrammarBuilder.grammar;
+import static turtle.RuleBuilder.aRule;
 
-import shapegrammar.Node;
-import turtle.TextualTurtle;
-import turtle.Turtle;
-import turtle.TurtleInterpreter;
+import java.io.IOException;
 
 /**
  * @author loic
@@ -17,18 +15,19 @@ import turtle.TurtleInterpreter;
 public class SierpinskiTriangle {
 	
 	public static void main(final String[] args) throws IOException {
-		final TurtleInterpreter<Turtle> interp = new TurtleInterpreter<>();
-		interp.declareRule('A', "A-B+A+B-A", "F");
-		interp.declareRule('B', "BB", "F");
-		final Node<? super Turtle> axiom = interp.createAxiom("A-B-B");
-		interp.evaluate(axiom, 1);
-		axiom.render(new TextualTurtle());
-		for(int i = 0; i < 5; i++) {
-			System.out.println();
-			interp.evaluate();
-			axiom.render(new TextualTurtle());
-		}
-		interp.writeToFile(axiom, "/tmp/sierpinski-triangle.svg", 2.0 * Math.PI / 3.0);
+		grammar()
+		.maxIterationIs(5)
+		.defaultDegreeAngleIs(60.0)
+		.initialAxiomIs("A-B-B")
+		.declare(
+				aRule('A')
+				.withExtension("A-B+A+B-A")
+				.withDefaultRendering("F"))
+		.declare(
+				aRule('B')
+				.withExtension("BB")
+				.withDefaultRendering("F"))
+		.save("/tmp/sierpinski-triangle.svg");
 	}
 
 }

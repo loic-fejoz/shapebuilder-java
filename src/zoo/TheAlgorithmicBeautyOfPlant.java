@@ -5,6 +5,7 @@ package zoo;
 
 import static turtle.GrammarBuilder.grammar;
 import static turtle.RuleBuilder.aRule;
+import static turtle.StochasticUserRuleBuilder.aStochasticRule;
 
 import java.io.IOException;
 
@@ -130,6 +131,19 @@ public class TheAlgorithmicBeautyOfPlant {
 					.withExtension("AA")
 					.withDefaultRendering("F"))
 			.save("/tmp/plant-25-f.svg");
+		// page 28
+		grammar()
+			.maxIterationIs(5)
+			.defaultDegreeAngleIs(22.5)
+			.initialAxiomIs("A")
+			.declare(
+					aStochasticRule('A')
+					.withDefaultRendering("F")
+						.subRule(1.0 / 3.0, aRule('1').withExtension("A[+A]A[-A]A"))
+						.subRule(1.0 / 3.0, aRule('2').withExtension("A[+A]A"))
+						.subRule(1.0 / 3.0, aRule('3').withExtension("A[-A]A"))
+					)
+			.save("/tmp/plant-28.svg");
 	}
 
 }

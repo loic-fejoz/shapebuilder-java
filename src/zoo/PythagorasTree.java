@@ -3,12 +3,10 @@
  */
 package zoo;
 
-import java.io.IOException;
+import static turtle.GrammarBuilder.grammar;
+import static turtle.RuleBuilder.aRule;
 
-import shapegrammar.Node;
-import turtle.TextualTurtle;
-import turtle.Turtle;
-import turtle.TurtleInterpreter;
+import java.io.IOException;
 
 /**
  * @author loic
@@ -17,19 +15,19 @@ import turtle.TurtleInterpreter;
 public class PythagorasTree {
 	
 	public static void main(final String[] args) throws IOException {
-		final TurtleInterpreter<Turtle> interp = new TurtleInterpreter<>();
-		// (1 → 11), (0 → 1[0]0)
-		interp.declareRule('A', "B[+A]-A", "F");
-		interp.declareRule('B', "BB", "F");
-		final Node<? super Turtle> axiom = interp.createAxiom("A");
-		interp.evaluate(axiom, 1);
-		axiom.render(new TextualTurtle());
-		for(int i = 0; i < 4; i++) {
-			System.out.println();
-			interp.evaluate();
-			axiom.render(new TextualTurtle());
-		}
-		interp.writeToFile(axiom, "/tmp/pythagoras-tree.svg", Math.PI / 4.0);
+		grammar()
+		.maxIterationIs(5)
+		.defaultDegreeAngleIs(45.0)
+		.initialAxiomIs("A")
+		.declare(
+				aRule('A')
+				.withExtension("B[+A]-A")
+				.withDefaultRendering("F"))
+		.declare(
+				aRule('B')
+				.withExtension("BB")
+				.withDefaultRendering("F"))
+		.save("/tmp/pythagoras-tree.svg");
 	}
 
 }

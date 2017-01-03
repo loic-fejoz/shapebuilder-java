@@ -7,33 +7,34 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import shapegrammar.Axiom;
 import shapegrammar.Interpreter;
 import shapegrammar.Node;
+import shapegrammar.Rule;
 
 public class TurtleInterpreter<R extends Turtle> extends Interpreter<R> {
 	
-	protected static class UserRuleDeclaration {
-		public char name;
-		public String extension;
-		public String defaultRendering;
-		
-		public UserRuleDeclaration(final char name2, final String extension2, final String defaultRendering2) {
-			name = name2;
-			extension = extension2;
-			defaultRendering = defaultRendering2;
-		}
-	}
 	
-	protected Map<Character, UserRuleDeclaration> userRules = new HashMap<>();
+	
+	protected Map<Character, UserRuleDeclaration<R>> userRules = new HashMap<>();
+	private Map<Character, StochasticUserRuleDeclaration<R>> stochasticRule = new HashMap<>();
+	
+	public TurtleInterpreter(final Random rnd) {
+		super(rnd);
+	}
 	
 	public TurtleInterpreter() {
-		super();
+		this(new Random());
 	}
-
-	public void declareRule(final char name, final String extension, final String defaultRendering) {
-		userRules.put(name, new UserRuleDeclaration(name, extension, defaultRendering));
+	
+	public void declareRule(final char name, final UserRuleDeclaration<R> ruleDecl) {
+		userRules.put(name, ruleDecl);
+	}
+	
+	public void declareRule(char name, StochasticUserRuleDeclaration<R> ruleDecl) {
+		stochasticRule.put(name, ruleDecl);
 	}
 
 	public Node<? super R> createAxiom(final String axioms) {
@@ -45,6 +46,9 @@ public class TurtleInterpreter<R extends Turtle> extends Interpreter<R> {
 		for(char c: extension.toCharArray()) {
 			if (userRules.containsKey(c)) {
 				final Node<? super R> child = new UserRule<R>(this, userRules.get(c));
+				axiomsList.add(child);
+			} else if (stochasticRule.containsKey(c)) {
+				final Node<? super R> child = new StochasticUserRule<>(this, stochasticRule.get(c));
 				axiomsList.add(child);
 			} else {
 				switch(c) {
@@ -70,7 +74,7 @@ public class TurtleInterpreter<R extends Turtle> extends Interpreter<R> {
 		}
 		return axiomsList;
 	}
-	
+
 	public void writeToFile(
 			final Node<? super Turtle> axiom,
 			final String path,

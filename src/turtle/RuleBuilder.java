@@ -3,6 +3,8 @@
  */
 package turtle;
 
+import turtle.UserRuleDeclaration;
+
 /**
  * @author loicfejoz
  *
@@ -29,5 +31,14 @@ public class RuleBuilder {
 	public RuleBuilder withDefaultRendering(String value) {
 		this.defaultRendering = value;
 		return this;
+	}
+
+	public char declare(GrammarBuilder grammarBuilder) {
+		grammarBuilder.declare(name, build());
+		return name;
+	}
+
+	public <R extends Turtle> UserRuleDeclaration<R> build() {
+		return new UserRuleDeclaration<R>(name, extension, defaultRendering);
 	}
 }

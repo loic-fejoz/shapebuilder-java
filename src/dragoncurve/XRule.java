@@ -25,7 +25,7 @@ public class XRule extends Rule<DragonRenderer> {
 	}
 
 	@Override
-	protected void renderDefault(DragonRenderer turtle) {
+	public void renderDefault(DragonRenderer turtle) {
 		turtle.x();
 	}
 }

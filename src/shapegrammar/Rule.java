@@ -10,6 +10,6 @@ public abstract class Rule<R> extends Node<R> {
 		}
 	}
 
-	protected abstract void renderDefault(R renderer);
+	public abstract void renderDefault(R renderer);
 
 }

@@ -3,12 +3,10 @@
  */
 package zoo;
 
-import java.io.IOException;
+import static turtle.GrammarBuilder.grammar;
+import static turtle.RuleBuilder.aRule;
 
-import shapegrammar.Node;
-import turtle.TextualTurtle;
-import turtle.Turtle;
-import turtle.TurtleInterpreter;
+import java.io.IOException;
 
 /**
  * @author loic
@@ -17,19 +15,18 @@ import turtle.TurtleInterpreter;
 public class FractalPlant {
 	
 	public static void main(final String[] args) throws IOException {
-		final TurtleInterpreter<Turtle> interp = new TurtleInterpreter<>();
-		// (X → F−[[X]+X]+F[+FX]−X), (F → FF)
-		interp.declareRule('A', "B-[[A]+A]+B[+BA]-A", "");
-		interp.declareRule('B', "BB", "F");
-		final Node<? super Turtle> axiom = interp.createAxiom("A");
-		interp.evaluate(axiom, 1);
-		axiom.render(new TextualTurtle());
-		for(int i = 0; i < 5; i++) {
-			System.out.println();
-			interp.evaluate();
-			axiom.render(new TextualTurtle());
-		}
-		interp.writeToFile(axiom, "/tmp/fractal.svg", 25.0 * Math.PI / 180.0);
+		grammar()
+			.maxIterationIs(5)
+			.defaultDegreeAngleIs(25.0)
+			.initialAxiomIs("A")
+			.declare(
+					aRule('A')
+					.withExtension("B-[[A]+A]+B[+BA]-A"))
+			.declare(
+					aRule('B')
+					.withExtension("BB")
+					.withDefaultRendering("F"))
+			.save("/tmp/fractal.svg");
 	}
 
 }

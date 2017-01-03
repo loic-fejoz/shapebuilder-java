@@ -7,7 +7,6 @@ import java.util.List;
 
 import shapegrammar.Node;
 import shapegrammar.Rule;
-import turtle.TurtleInterpreter.UserRuleDeclaration;
 
 /**
  * @author loic
@@ -15,10 +14,10 @@ import turtle.TurtleInterpreter.UserRuleDeclaration;
  */
 public class UserRule<R extends Turtle> extends Rule<R> {
 
-	protected UserRuleDeclaration decl;
+	protected UserRuleDeclaration<R> decl;
 	private TurtleInterpreter<R> interpreter;
 
-	public UserRule(final TurtleInterpreter<R> interpreter, final UserRuleDeclaration declaration) {
+	public UserRule(final TurtleInterpreter<R> interpreter, final UserRuleDeclaration<R> declaration) {
 		this.interpreter = interpreter;
 		if (declaration == null) {
 			throw new IllegalArgumentException("declaration must not be null.");
@@ -27,28 +26,8 @@ public class UserRule<R extends Turtle> extends Rule<R> {
 	}
 
 	@Override
-	protected void renderDefault(final R renderer) {
-		for(char c: decl.defaultRendering.toCharArray()) {
-			switch(c) {
-			case 'F':
-				renderer.forward();
-				break;
-			case '+':
-				renderer.left();
-				break;
-			case '-':
-				renderer.right();
-				break;
-			case '[':
-				renderer.push();
-				break;
-			case ']':
-				renderer.pop();
-				break;
-			default:
-				throw new IllegalArgumentException("Unknown: " + c);
-			}
-		}
+	public void renderDefault(final R renderer) {
+		decl.renderDefault(renderer);
 	}
 
 	@Override
